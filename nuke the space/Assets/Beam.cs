@@ -4,29 +4,28 @@ using UnityEngine.Events;
 
 public class Beam : MonoBehaviour
 {
-    public float BeginRadius = 1;
+    public float BeginRadius = 0;
     public float MaxRadius = 1;
-    public float EndRadius = 1;
+    public float EndRadius = 0;
     public float Distance = 1000;
-    public AnimationClip ssss;
-    private Vector3 direction = new Vector3(1, 0, 0);
+    public float FadeInTime = 1;
+    public float KeepTime = 0;
+    public float FadeOutTime = 2;
     public GameObject model;
 
     // Use this for initialization
     void Start()
     {
-        model.transform.localScale = new Vector3(Distance, 1, 1);
-        StartCoroutine(GrowHitAndFade(MaxRadius, 1, 0, 5));
+        StartCoroutine(GrowHitAndFade());
     }
-    private IEnumerator GrowHitAndFade(float radius, float fadeInTime, float keepTime, float fadeOutTime)
+
+    private IEnumerator GrowHitAndFade()
     {
-        var beginRad = 0f;
-        var endRad = 0f;
-        var fadeIn_EndTime = Time.time + fadeInTime;
-        var max_EndTime = fadeIn_EndTime + keepTime;
-        var fadeOut_EndTime = max_EndTime + fadeOutTime;
-        var fadeinCurve = AnimationCurve.EaseInOut(Time.time, beginRad, fadeIn_EndTime, radius);
-        var fadeoutCurve = AnimationCurve.EaseInOut(max_EndTime, radius, fadeOut_EndTime, endRad);
+        var fadeIn_EndTime = Time.time + FadeInTime;
+        var max_EndTime = fadeIn_EndTime + KeepTime;
+        var fadeOut_EndTime = max_EndTime + FadeOutTime;
+        var fadeinCurve = AnimationCurve.EaseInOut(Time.time, BeginRadius, fadeIn_EndTime, MaxRadius);
+        var fadeoutCurve = AnimationCurve.EaseInOut(max_EndTime, MaxRadius, fadeOut_EndTime, EndRadius);
         yield return null;
 
         while (Time.time < fadeIn_EndTime)
@@ -36,7 +35,7 @@ public class Beam : MonoBehaviour
             yield return null;
         }
 
-        model.transform.localScale = new Vector3(Distance, radius, radius);
+        model.transform.localScale = new Vector3(Distance, MaxRadius, MaxRadius);
         while (Time.time < max_EndTime)
         {
             yield return null;
