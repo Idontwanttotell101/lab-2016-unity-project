@@ -28,6 +28,8 @@ public class Beam : MonoBehaviour
         var fadeoutCurve = AnimationCurve.EaseInOut(max_EndTime, MaxRadius, fadeOut_EndTime, EndRadius);
         yield return null;
 
+        model.transform.localScale = new Vector3(Distance, BeginRadius, BeginRadius);
+        model.SetActive(true);
         while (Time.time < fadeIn_EndTime)
         {
             var r = fadeinCurve.Evaluate(Time.time);
