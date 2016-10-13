@@ -48,6 +48,6 @@ public class Beam : MonoBehaviour
             yield return null;
         }
 
-        Destroy(model);
+        Destroy(this.gameObject);
     }
 }
