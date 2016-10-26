@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Sword.unity
+- path: Assets/route/route.unity
   isLoaded: 1
   isActive: 1

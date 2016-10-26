@@ -8,16 +8,26 @@ public class RouterTracker : MonoBehaviour
     public Router PrevRouter;
     public Router NextRouter;
 
-    // Update is called once per frame
-    void Update()
+    void Start()
     {
-        if (Input.GetKey(KeyCode.RightArrow))
+        if (PrevRouter == null && NextRouter == null)
         {
-            MoveForword();
+            Debug.LogError("No Route Set", this.gameObject);
+            this.enabled = false;
+            return;
         }
-        else if (Input.GetKey(KeyCode.LeftArrow))
+
+        if (PrevRouter == null)
         {
-            MoveBackword();
+            PrevRouter = NextRouter.Prev;
+        }
+        else if (NextRouter == null)
+        {
+            NextRouter = PrevRouter.Next;
+        }
+
+        if (PrevRouter != NextRouter.Prev || NextRouter != PrevRouter.Next) {
+            Debug.LogError("Prev and Next router not match",this.gameObject);
         }
     }
 
@@ -30,7 +40,7 @@ public class RouterTracker : MonoBehaviour
             return;
         }
 
-        var diff =  router.transform.position - transform.position;
+        var diff = router.transform.position - transform.position;
 
         // close to router
         if (diff.magnitude < speed)
