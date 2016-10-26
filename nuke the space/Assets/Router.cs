@@ -9,14 +9,19 @@ public class Router : MonoBehaviour
     public route NextRoute;
     public Vector3 currentSpeed;
 
+    void Start() {
+        currentSpeed = (NextRoute.transform.position - PrevRoute.transform.position).normalized * speed;
+    }
+
     // Update is called once per frame
     void Update()
     {
-
-
-        if ((transform.position - NextRoute.transform.position).magnitude < speed)
+        if (Input.GetKey(KeyCode.RightArrow))
         {
-
+            MoveForword();
+        }
+        else if (Input.GetKey(KeyCode.LeftArrow)) {
+            MoveBackword();
         }
     }
 
@@ -30,7 +35,10 @@ public class Router : MonoBehaviour
         if ((transform.position - NextRoute.transform.position).magnitude < speed)
         {
             this.transform.position = NextRoute.transform.position;
-            UpdateRouteTable(NextRoute);
+            if (NextRoute.Next == null) return;
+            PrevRoute = NextRoute;
+            NextRoute = NextRoute.Next ;
+            currentSpeed = (NextRoute.transform.position - PrevRoute.transform.position).normalized * speed;
         }
         else
         {
@@ -47,7 +55,10 @@ public class Router : MonoBehaviour
         if ((transform.position - PrevRoute.transform.position).magnitude < speed)
         {
             this.transform.position = PrevRoute.transform.position;
-            UpdateRouteTable(PrevRoute);
+            if (PrevRoute.Prev == null) return;
+            NextRoute = PrevRoute;
+            PrevRoute = PrevRoute.Prev;
+            currentSpeed = (NextRoute.transform.position - PrevRoute.transform.position).normalized * speed;
         }
         else
         {
@@ -59,5 +70,6 @@ public class Router : MonoBehaviour
     {
         PrevRoute = routePoint.Prev;
         NextRoute = routePoint.Next;
+        currentSpeed = (NextRoute.transform.position - PrevRoute.transform.position).normalized * speed;
     }
 }
