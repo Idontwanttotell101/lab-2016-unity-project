@@ -17,11 +17,10 @@ public class StarGenerator : MonoBehaviour
         }
         for (int i = 0; i < 1000; ++i)
         {
-            Vector3 pos = Random.insideUnitCircle * maxdistance;
-            (Instantiate(star[Random.Range(0, star.Length - 1)], transform.position + pos, Random.rotationUniform)
-                as GameObject)
-                .transform.parent = this.transform;
-
-        }
+            var randomRelatedPos = (Vector3)Random.insideUnitCircle * maxdistance;
+            var realpos = this.transform.TransformVector(transform.position + randomRelatedPos);
+            var starIns = Instantiate(star[Random.Range(0, star.Length - 1)], realpos, Random.rotationUniform) as GameObject;
+            starIns.transform.parent = this.transform;
     }
+}
 }
