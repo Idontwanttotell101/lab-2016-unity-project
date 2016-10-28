@@ -26,8 +26,9 @@ public class RouterTracker : MonoBehaviour
             NextRouter = PrevRouter.Next;
         }
 
-        if (PrevRouter != NextRouter.Prev || NextRouter != PrevRouter.Next) {
-            Debug.LogError("Prev and Next router not match",this.gameObject);
+        if (PrevRouter != NextRouter.Prev || NextRouter != PrevRouter.Next)
+        {
+            Debug.LogError("Prev and Next router not match", this.gameObject);
         }
     }
 
@@ -51,24 +52,37 @@ public class RouterTracker : MonoBehaviour
             //update route table
             if (forword)
             {
-                //if (router.Next == null) return;
-                //NextRouter = NextRouter.Next;
-                PrevRouter = NextRouter;
-                NextRouter = NextRouter.Next;
-                if (router.IsPortal)
+                if (router.IsForwardPortal)
                 {
-                    Debug.Assert(NextRouter.Next!=null,"Portal Not Connected",);
-                    this.transform.position = NextRouter.transform.position;
+                    var relatedPortal = NextRouter.Next;
+                    Debug.Assert(relatedPortal != null, "Forward Portal Not Connected", NextRouter);
+                    this.transform.position = relatedPortal.transform.position;
+                    PrevRouter = relatedPortal;
+                    NextRouter = relatedPortal.Next;
+                }
+                else
+                {
                     PrevRouter = NextRouter;
                     NextRouter = NextRouter.Next;
                 }
+
             }
             else
             {
-               // if (router.Prev == null) return;
-                NextRouter = PrevRouter;
-                PrevRouter = PrevRouter.Prev;
-                //if (router.IsPortal) this.transform.position = PrevRouter.transform.position;
+                if (router.IsBackPortal)
+                {
+                    var relatedPortal = PrevRouter.Prev;
+                    Debug.Assert(relatedPortal != null, "Back Portal Not Connected", PrevRouter);
+                    this.transform.position = relatedPortal.transform.position;
+                    PrevRouter = relatedPortal;
+                    NextRouter = relatedPortal.Next;
+                }
+                else
+                {
+                    NextRouter = PrevRouter;
+                    PrevRouter = PrevRouter.Prev;
+                }
+
             }
         }
         else
@@ -85,6 +99,6 @@ public class RouterTracker : MonoBehaviour
 
     public void MoveBackword()
     {
-        MoveToward(PrevRouter, Speed,false);
+        MoveToward(PrevRouter, Speed, false);
     }
 }

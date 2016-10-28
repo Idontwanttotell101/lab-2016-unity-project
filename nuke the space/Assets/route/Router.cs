@@ -5,6 +5,6 @@ public class Router : MonoBehaviour
 {
     public Router Prev;
     public Router Next;
-    public bool IsPortal = false;
-    public Router IsForwardPortal = true;
+    public bool IsBackPortal = false;
+    public bool IsForwardPortal = false;
 }
