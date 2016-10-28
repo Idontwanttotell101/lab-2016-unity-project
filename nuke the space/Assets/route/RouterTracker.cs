@@ -76,6 +76,6 @@ public class RouterTracker : MonoBehaviour
 
     public void MoveBackword()
     {
-        MoveToward(PrevRouter, Speed);
+        MoveToward(PrevRouter, Speed,false);
     }
 }
