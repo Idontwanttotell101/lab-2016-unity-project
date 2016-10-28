@@ -51,15 +51,24 @@ public class RouterTracker : MonoBehaviour
             //update route table
             if (forword)
             {
-                if (router.Next == null) return;
+                //if (router.Next == null) return;
+                //NextRouter = NextRouter.Next;
                 PrevRouter = NextRouter;
                 NextRouter = NextRouter.Next;
+                if (router.IsPortal)
+                {
+                    Debug.Assert(NextRouter.Next!=null,"Portal Not Connected",);
+                    this.transform.position = NextRouter.transform.position;
+                    PrevRouter = NextRouter;
+                    NextRouter = NextRouter.Next;
+                }
             }
             else
             {
-                if (router.Prev == null) return;
+               // if (router.Prev == null) return;
                 NextRouter = PrevRouter;
                 PrevRouter = PrevRouter.Prev;
+                //if (router.IsPortal) this.transform.position = PrevRouter.transform.position;
             }
         }
         else
