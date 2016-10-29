@@ -21,15 +21,20 @@ public class LineAttack : MonoBehaviour
         CancelInvoke("DoAttack");
     }
 
+    public void Update()
+    {
+        Debug.DrawLine(transform.position, transform.position + Direction.normalized * Distance, Color.cyan);
+    }
+
     //this function do a real attack detection and effect the HP component
     //this function is automatically called base on the configuration
     //there is no need to call this manually
     public void DoAttack()
     {
         var inrange = Physics.RaycastAll(this.transform.position, Direction, Distance);
-        Debug.DrawLine(transform.position, transform.position + Direction.normalized * Distance);
         foreach (var hp in inrange.Select(x => x.collider.GetComponent<HP>()))
         {
+            Debug.Log("Hit" + hp.gameObject.name);
             hp.Value -= DamagePerPeriod;
         }
     }

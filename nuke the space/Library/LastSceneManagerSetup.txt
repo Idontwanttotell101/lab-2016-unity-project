@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Attack/[demo]beam.unity
+- path: Assets/New Attack Model/New Attack Model Demo.unity
   isLoaded: 1
   isActive: 1

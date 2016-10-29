@@ -36,7 +36,7 @@ public class HP : MonoBehaviour
 
     private void CheckedHP()
     {
-        if (Value < 0)
+        if (Value <= 0)
             Destroy(this.gameObject);
         if (Value > Max)
             Value = Max;
