@@ -13,6 +13,11 @@ public class Beam : MonoBehaviour
     public float FadeOutTime = 2;
     public GameObject model;
 
+    public static Beam CastBeam()
+    {
+        return new GameObject("name", typeof(Beam)).GetComponent<Beam>();
+    }
+
     // Use this for initialization
     void Start()
     {
