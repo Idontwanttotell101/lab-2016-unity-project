@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+//TODO : split to Attack Receiver
 public class HP : MonoBehaviour
 {
     [System.Serializable]
@@ -24,7 +25,7 @@ public class HP : MonoBehaviour
         {
             return _value;
         }
-        private set
+        set
         {
             BeforeHpChange.Invoke(this);
             _value = value;
