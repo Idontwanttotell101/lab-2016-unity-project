@@ -8,12 +8,14 @@ public class BeamModel : MonoBehaviour
     public float MaxRadius = 1;
     public float EndRadius = 0;
     public float Distance = 1000;
+    public Vector3 Direction = Vector3.right;
     public float FadeInTime = 1;
     public float KeepTime = 0;
     public float FadeOutTime = 2;
 
     void Start()
     {
+        this.transform.localRotation = Quaternion.FromToRotation(Vector3.right, Direction);
         StartCoroutine(GrowAndFade());
     }
 
@@ -48,7 +50,5 @@ public class BeamModel : MonoBehaviour
             transform.localScale = new Vector3(Distance, r, r);
             yield return null;
         }
-
-        Destroy(this.gameObject);
     }
 }
