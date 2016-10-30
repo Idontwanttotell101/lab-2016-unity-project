@@ -3,6 +3,30 @@ using System.Collections;
 
 public class Beam : MonoBehaviour
 {
+    private static class ResourceLoader
+    {
+        private static BeamModel beamModelPrefeb;
+
+        static ResourceLoader()
+        {
+            beamModelPrefeb = Resources.Load<BeamModel>("Beam Render Model");
+            beamModelPrefeb.gameObject.SetActive(false);
+        }
+
+        public static BeamModel CreateDisabledBeamModel
+        {
+            get
+            {
+                return Instantiate(beamModelPrefeb);
+            }
+        }
+        public static LineAttack CreateDisabledAttackModel
+        {
+            get;
+            set;
+        }
+    }
+
     public Vector3 Direction = Vector3.right;
     public float Distance = 15;
     public float Duration = 4;
