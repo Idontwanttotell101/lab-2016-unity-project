@@ -10,7 +10,7 @@ public class HP : MonoBehaviour
         /*parameter : this*/
     };
 
-    //[SerializeField]
+    //[SerializeField] //currently not changeable
     [System.NonSerialized]
     private float Max = float.PositiveInfinity;
     [SerializeField]

@@ -2,13 +2,16 @@
 using System.Collections;
 using System.Linq;
 
+
+//TODO : Layered Attack
+
 public class LineAttack : MonoBehaviour
 {
 
-    public Vector3 Direction;
-    public float Distance;
+    public Vector3 Direction = new Vector3(1, 0, 0);
+    public float Distance = 10;
     public float DamagePerPeriod = 1;
-    public float DamagePeriod = 1;
+    public float DamagePeriod = 0.05f;
     public float FirstDamageDelay = 0;
 
     void Start()
@@ -21,11 +24,6 @@ public class LineAttack : MonoBehaviour
         CancelInvoke("DoAttack");
     }
 
-    public void Update()
-    {
-        Debug.DrawLine(transform.position, transform.position + Direction.normalized * Distance, Color.cyan);
-    }
-
     //this function do a real attack detection and effect the HP component
     //this function is automatically called base on the configuration
     //there is no need to call this manually
@@ -34,7 +32,7 @@ public class LineAttack : MonoBehaviour
         var inrange = Physics.RaycastAll(this.transform.position, Direction, Distance);
         foreach (var hp in inrange.Select(x => x.collider.GetComponent<HP>()))
         {
-            Debug.Log("Hit" + hp.gameObject.name);
+            Debug.Log("Hit : " + hp.gameObject.name, hp.gameObject);
             hp.Value -= DamagePerPeriod;
         }
     }
