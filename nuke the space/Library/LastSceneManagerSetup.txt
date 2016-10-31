@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Attack/DEMO/New Attack Model Demo.unity
+- path: Assets/route/portal.unity
   isLoaded: 1
   isActive: 1

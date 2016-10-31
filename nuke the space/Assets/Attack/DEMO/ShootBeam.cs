@@ -22,7 +22,8 @@ public class ShootBeam : MonoBehaviour
             Debug.Log(hit);
             Debug.DrawRay(transform.position, direction);
 
-            BeamLauncher.CastBeam(transform.position, hit - transform.position, 10);
+            var beam = BeamLauncher.CastBeam(transform.position, hit - transform.position, 10);
+            beam.transform.parent = this.transform;
         }
     }
 }

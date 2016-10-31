@@ -10,6 +10,8 @@ public class BeamLauncher
         resource.Distance = distance;
         resource.DPS = DPS;
         resource.Duration = duration;
-        return GameObject.Instantiate(resource);
+        var beam = GameObject.Instantiate(resource);
+        beam.transform.position = origin;
+        return beam;
     }
 }
