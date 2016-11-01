@@ -23,12 +23,14 @@ public class RouteRenderer : MonoBehaviour
             prevRoute = new GameObject("Prev Route", typeof(LineRenderer)).GetComponent<LineRenderer>();
             prevRoute.SetPositions(new Vector3[] { transform.position, transform.position });
             prevRoute.transform.parent = this.transform;
+            prevRoute.material = router.IsBackPortal ? hmat : mat;
         }
         if (router.Next != null)
         {
             nextRoute = new GameObject("Next Route", typeof(LineRenderer)).GetComponent<LineRenderer>();
             nextRoute.SetPositions(new Vector3[] { transform.position, transform.position });
             nextRoute.transform.parent = this.transform;
+            nextRoute.material = router.IsForwardPortal ? hmat : mat;
         }
     }
 
