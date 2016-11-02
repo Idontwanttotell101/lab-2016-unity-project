@@ -1,52 +1,45 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Linq;
+using System;
+using System.Collections.Generic;
 
 public class RouteRenderer : MonoBehaviour
 {
-    Router router;
-    LineRenderer prevRoute;
-    LineRenderer nextRoute;
-    Material mat;
-    Material hmat;
+    class RouterPair
+    {
+        public Router lhs;
+        public Router rhs;
+    }
+
+    class RouterPairComparer : IEqualityComparer<RouterPair>
+    {
+        bool IEqualityComparer<RouterPair>.Equals(RouterPair x, RouterPair y)
+        {
+            return
+                (x.lhs == y.lhs && x.rhs == y.rhs)
+                || (x.lhs == y.rhs && x.rhs == y.lhs);
+        }
+
+        int IEqualityComparer<RouterPair>.GetHashCode(RouterPair obj)
+        {
+            return (obj as object).GetHashCode();
+        }
+    }
 
     // Use this for initialization
     void Start()
     {
-        router = GetComponent<Router>();
-        if (router == null) Destroy(this);
+        var routers = FindObjectsOfType<Router>();
+        var uniqueRoute = routers.SelectMany(x =>
+        new RouterPair[]{
+            new RouterPair() { lhs = x,rhs = x.Next },
+            new RouterPair() { lhs = x,rhs = x.Prev }
+        })
+        .Where(x => x.lhs != null && x.rhs != null)
+        .GroupBy(x => x, new RouterPairComparer());
 
-        mat = Resources.Load<Material>("Route Material");
-        hmat = Resources.Load<Material>("Hint Route Material");
-
-        if (router.Prev != null)
-        {
-            prevRoute = new GameObject("Prev Route", typeof(LineRenderer)).GetComponent<LineRenderer>();
-            prevRoute.SetPositions(new Vector3[] { transform.position, transform.position });
-            prevRoute.transform.parent = this.transform;
-            prevRoute.material = router.IsBackPortal ? hmat : mat;
+        foreach (var pair in uniqueRoute) {
+            throw new NotImplementedException("Go To Class");
         }
-        if (router.Next != null)
-        {
-            nextRoute = new GameObject("Next Route", typeof(LineRenderer)).GetComponent<LineRenderer>();
-            nextRoute.SetPositions(new Vector3[] { transform.position, transform.position });
-            nextRoute.transform.parent = this.transform;
-            nextRoute.material = router.IsForwardPortal ? hmat : mat;
-        }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (router.Prev != null)
-        {
-            prevRoute.SetPosition(0, this.transform.position);
-            prevRoute.SetPosition(1, router.Prev.transform.position);
-        }
-        if (router.Next != null)
-        {
-            nextRoute.SetPosition(0, this.transform.position);
-            nextRoute.SetPosition(1, router.Next.transform.position);
-        }
-
     }
 }
