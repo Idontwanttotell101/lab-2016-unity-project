@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Stage/stage2.unity
+- path: Assets/route/RouteRenderer.unity
   isLoaded: 1
   isActive: 1
