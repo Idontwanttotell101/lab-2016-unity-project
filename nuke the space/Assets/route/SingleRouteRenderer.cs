@@ -15,6 +15,7 @@ public class SingleRouteRenderer : MonoBehaviour
         {
             mat = Resources.Load<Material>("Route Material");
             hmat = Resources.Load<Material>("Hint Route Material");
+            MaterialLoaded = true;
         }
         return isPortal ? hmat : mat;
     }
