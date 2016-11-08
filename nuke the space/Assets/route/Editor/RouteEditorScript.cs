@@ -18,10 +18,11 @@ public class RouteEditorScript : Editor
     (Rect rect, int index, bool isActive, bool isFocused) =>
     {
         var element = list.serializedProperty.GetArrayElementAtIndex(index);
-        var pos = element.FindPropertyRelative("position");
         rect.y += 2;
 
-        EditorGUILayout.PropertyField(pos, GUIContent.none);
+        EditorGUI.PropertyField(
+            new Rect(rect.x, rect.y, rect.width-4, EditorGUIUtility.singleLineHeight),
+            element, GUIContent.none,false);
     };
     }
 
