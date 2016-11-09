@@ -11,7 +11,7 @@ public class RouteEditorScript : Editor
     private void OnEnable()
     {
         list = new ReorderableList(serializedObject,
-                serializedObject.FindProperty("Transforms"),
+                serializedObject.FindProperty("positions"),
                 true, true, true, true);
 
         list.drawElementCallback =
@@ -21,13 +21,14 @@ public class RouteEditorScript : Editor
         rect.y += 2;
 
         EditorGUI.PropertyField(
-            new Rect(rect.x, rect.y, rect.width-4, EditorGUIUtility.singleLineHeight),
-            element, GUIContent.none,false);
+            new Rect(rect.x, rect.y, rect.width - 4, EditorGUIUtility.singleLineHeight),
+            element, GUIContent.none, false);
     };
     }
 
     public override void OnInspectorGUI()
     {
+        DrawDefaultInspector();
         serializedObject.Update();
         list.DoLayoutList();
         serializedObject.ApplyModifiedProperties();
@@ -41,12 +42,23 @@ public class RouteEditorScript : Editor
         if (t == null)
             return;
 
-        // iterate over game objects added to the array...
-        //for (int i = 0; i < t.Routers.Count; i++)
-        // {
-        //    // ... and draw a line between them
-        //     if (t.[i] != null)
-        //        Handles.DrawLine(center, t.GameObjects[i].transform.position);
-        // }
+        for (int i = 0; i < t.positions.Count; ++i)
+        {
+            EditorGUI.BeginChangeCheck();
+
+            Vector3 position = Handles.PositionHandle(t.positions[i], Quaternion.identity);
+
+            if (EditorGUI.EndChangeCheck())
+            {
+                Undo.RecordObject(target, "Changed Router Position");
+                t.positions[i] = position;
+            }
+        }
+
+        for (int i = 1; i < t.positions.Count; ++i)
+        {
+            Handles.color = Color.cyan;
+            Handles.DrawLine(t.positions[i], t.positions[i - 1]);
+        }
     }
 }
