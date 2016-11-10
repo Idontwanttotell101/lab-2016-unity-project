@@ -46,6 +46,7 @@ public class RouteEditorScript : Editor
         {
             EditorGUI.BeginChangeCheck();
 
+            Handles.Label(t.positions[i],"LABLE");
             Vector3 position = Handles.PositionHandle(t.positions[i], Quaternion.identity);
 
             if (EditorGUI.EndChangeCheck())
