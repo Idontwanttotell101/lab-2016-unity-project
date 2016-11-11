@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/route/RouteRenderer.unity
+- path: Assets/route/RouteEditor.unity
   isLoaded: 1
   isActive: 1

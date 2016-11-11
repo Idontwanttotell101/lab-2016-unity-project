@@ -14,21 +14,26 @@ public class RouteEditorScript : Editor
                 serializedObject.FindProperty("positions"),
                 true, true, true, true);
 
-        list.drawElementCallback =
-    (Rect rect, int index, bool isActive, bool isFocused) =>
-    {
-        var element = list.serializedProperty.GetArrayElementAtIndex(index);
-        rect.y += 2;
+        list.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
+        {
+            var element = list.serializedProperty.GetArrayElementAtIndex(index);
+            rect.y += 2;
 
-        EditorGUI.PropertyField(
-            new Rect(rect.x, rect.y, rect.width - 4, EditorGUIUtility.singleLineHeight),
-            element, GUIContent.none, false);
-    };
+            EditorGUI.PropertyField(
+                new Rect(rect.x, rect.y, rect.width - 4, EditorGUIUtility.singleLineHeight),
+                element, GUIContent.none, false);
+        };
+        list.drawHeaderCallback = (Rect rect) =>
+        {
+            EditorGUI.LabelField(rect, "Routers");
+        };
+
     }
 
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
+        //EditorGUILayout.ObjectField("RouteEditorScript.cs",this,typeof(RouteEditorScript),false);
         serializedObject.Update();
         list.DoLayoutList();
         serializedObject.ApplyModifiedProperties();
@@ -46,7 +51,7 @@ public class RouteEditorScript : Editor
         {
             EditorGUI.BeginChangeCheck();
 
-            Handles.Label(t.positions[i],"LABLE");
+            Handles.Label(t.positions[i], "LABLE");
             Vector3 position = Handles.PositionHandle(t.positions[i], Quaternion.identity);
 
             if (EditorGUI.EndChangeCheck())
