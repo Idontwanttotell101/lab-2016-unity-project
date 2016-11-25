@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using UnityEditorInternal;
+using System.Linq;
 
 [CustomEditor(typeof(RouteEditor))]
 public class RouteEditorScript : Editor
@@ -36,6 +37,41 @@ public class RouteEditorScript : Editor
         serializedObject.Update();
         list.DoLayoutList();
         serializedObject.ApplyModifiedProperties();
+        if (GUILayout.Button("create instance"))
+        {
+            Router prev = null;
+
+            Undo.RegisterFullObjectHierarchyUndo(target, "create instances");
+            var haschildren = (target as RouteEditor).GetComponentsInChildren<Transform>().Count() != 1;
+            if (haschildren)
+            {
+                Debug.LogError("children already exist", target);
+                return;
+            }
+
+            int index = 0;
+            foreach (var p in (target as RouteEditor).positions)
+            {
+                ++index;
+                var router = new GameObject();
+                router.name = index.ToString();
+                router.transform.parent = (target as RouteEditor).transform;
+                router.transform.position = p;
+                var component = router.AddComponent<Router>();
+                component.Prev = prev;
+                if (prev != null) { prev.Next = component; }
+                prev = component;
+            }
+        }
+        if (GUILayout.Button("clear instance"))
+        {
+            Undo.RegisterFullObjectHierarchyUndo(target, "destroy instances");
+            var haschildren = (target as RouteEditor).GetComponentsInChildren<Transform>().Where(x => x.transform != (target as RouteEditor).transform).Select(x => x.gameObject).ToList();
+            foreach (var c in haschildren)
+            {
+                GameObject.DestroyImmediate(c);
+            }
+        }
     }
 
     void OnSceneGUI()
@@ -50,7 +86,7 @@ public class RouteEditorScript : Editor
         {
             EditorGUI.BeginChangeCheck();
 
-            Handles.Label(t.positions[i], "LABLE");
+            Handles.Label(t.positions[i], i.ToString());
             Vector3 position = Handles.PositionHandle(t.positions[i], Quaternion.identity);
 
             if (EditorGUI.EndChangeCheck())
