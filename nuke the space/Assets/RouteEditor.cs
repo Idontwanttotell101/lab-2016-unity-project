@@ -13,9 +13,8 @@ public class RouteEditor : MonoBehaviour
     public List<float> enemies;
     public float position;
 
-    public Vector3 GetPos(float pos_persent)
+    public Vector3 GetPos(float pos)
     {
-        var pos = position;
         List<float> accu = new List<float>();
         accu.Add(0);
         for (int i = 1; i < positions.Count; ++i)

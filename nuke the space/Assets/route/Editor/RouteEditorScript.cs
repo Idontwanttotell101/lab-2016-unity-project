@@ -7,6 +7,7 @@ using System.Linq;
 public class RouteEditorScript : Editor
 {
     private ReorderableList list;
+    private ReorderableList enemylist;
 
     private void OnEnable()
     {
@@ -31,6 +32,25 @@ public class RouteEditorScript : Editor
             EditorGUI.LabelField(rect, "Routers");
         };
 
+
+        enemylist = new ReorderableList(serializedObject,
+                serializedObject.FindProperty("enemies"),
+                true, true, true, true);
+
+        enemylist.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
+        {
+            var element = enemylist.serializedProperty.GetArrayElementAtIndex(index);
+            rect.y += 2;
+
+            EditorGUI.Slider(
+                new Rect(rect.x, rect.y, rect.width - 4, EditorGUIUtility.singleLineHeight),
+                element, 0, 1, new GUIContent("enemy " + (index + 1).ToString()));
+        };
+        enemylist.drawHeaderCallback = (Rect rect) =>
+        {
+            EditorGUI.LabelField(rect, "Enemies");
+        };
+
     }
 
     public override void OnInspectorGUI()
@@ -39,6 +59,7 @@ public class RouteEditorScript : Editor
         //EditorGUILayout.ObjectField("RouteEditorScript.cs",this,typeof(RouteEditorScript),false);
         serializedObject.Update();
         list.DoLayoutList();
+        enemylist.DoLayoutList();
         serializedObject.ApplyModifiedProperties();
         if (GUILayout.Button("create instance"))
         {
@@ -129,9 +150,22 @@ public class RouteEditorScript : Editor
             Handles.DrawLine(t.positions[i], t.positions[i - 1]);
         }
 
-        var pos = (target as RouteEditor).GetPos();
 
-        Handles.color = Color.green;
-        Handles.SphereCap(0, pos, Quaternion.identity, 1);
+        {
+            int indexx = 0;
+            Handles.color = Color.red;
+            foreach (var p in (target as RouteEditor).enemies)
+            {
+                var pos = (target as RouteEditor).GetPos(p);
+                Handles.SphereCap(0, pos, Quaternion.identity, 1);
+                Handles.Label(pos, (++indexx).ToString());
+            }
+        }
+        {
+            var pos = (target as RouteEditor).GetPos((target as RouteEditor).position);
+
+            Handles.color = Color.green;
+            Handles.SphereCap(0, pos, Quaternion.identity, 1);
+        }
     }
 }

@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/route/RouteEditor.unity
+- path: Assets/dust.unity
   isLoaded: 1
   isActive: 1
