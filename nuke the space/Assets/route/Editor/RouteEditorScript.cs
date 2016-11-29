@@ -78,8 +78,18 @@ public class RouteEditorScript : Editor
         if (GUILayout.Button("align view"))
         {
             //Undo.RegisterFullObjectHierarchyUndo(SceneView.lastActiveSceneView.camera, "align view"); //usually not undo-able in unity
-            SceneView.lastActiveSceneView.camera.transform.rotation = Quaternion.FromToRotation(Vector3.forward, Vector3.down);
+
+            GameObject g = new GameObject();
+            g.transform.position = (target as RouteEditor).transform.position + Vector3.up * 1000;
+            g.transform.rotation = Quaternion.FromToRotation(Vector3.forward, Vector3.down);
+
+            SceneView.lastActiveSceneView.AlignViewToObject(g.transform);
+            GameObject.DestroyImmediate(g);
         }
+
+        (target as RouteEditor).position = GUILayout.HorizontalSlider((target as RouteEditor).position, 0, 1);
+
+        SceneView.RepaintAll();
     }
 
     void OnSceneGUI()
@@ -97,10 +107,13 @@ public class RouteEditorScript : Editor
             Handles.Label(t.positions[i], i.ToString());
             //Vector3 position = Handles.PositionHandle(t.positions[i], Quaternion.identity);
             Vector3 position = t.positions[i];
-            Handles.color = Handles.xAxisColor;
-            position = Handles.Slider(position, Vector3.right);
-            Handles.color = Handles.zAxisColor;
-            position = Handles.Slider(position, Vector3.forward);
+
+            //x z handles
+            //Handles.color = Handles.xAxisColor;
+            //position = Handles.Slider(position, Vector3.right);
+            //Handles.color = Handles.zAxisColor;
+            //position = Handles.Slider(position, Vector3.forward);
+
             Handles.color = Handles.zAxisColor;
             position = Handles.FreeMoveHandle(position, Quaternion.identity, 0.5f, new Vector3(.5f, .5f, .5f), Handles.RectangleCap);
             if (EditorGUI.EndChangeCheck())
@@ -115,5 +128,10 @@ public class RouteEditorScript : Editor
             Handles.color = Color.cyan;
             Handles.DrawLine(t.positions[i], t.positions[i - 1]);
         }
+
+        var pos = (target as RouteEditor).GetPos();
+
+        Handles.color = Color.green;
+        Handles.SphereCap(0, pos, Quaternion.identity, 1);
     }
 }
