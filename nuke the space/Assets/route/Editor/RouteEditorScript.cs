@@ -22,6 +22,9 @@ public class RouteEditorScript : Editor
             EditorGUI.PropertyField(
                 new Rect(rect.x, rect.y, rect.width - 4, EditorGUIUtility.singleLineHeight),
                 element, GUIContent.none, false);
+            EditorGUI.PropertyField(
+                 new Rect(rect.x, rect.y, rect.width - 4, EditorGUIUtility.singleLineHeight),
+                 element, GUIContent.none, false);
         };
         list.drawHeaderCallback = (Rect rect) =>
         {
@@ -49,7 +52,7 @@ public class RouteEditorScript : Editor
                 return;
             }
 
-            int index = 0;
+            int index = -1;
             foreach (var p in (target as RouteEditor).positions)
             {
                 ++index;
@@ -72,6 +75,11 @@ public class RouteEditorScript : Editor
                 GameObject.DestroyImmediate(c);
             }
         }
+        if (GUILayout.Button("align view"))
+        {
+            //Undo.RegisterFullObjectHierarchyUndo(SceneView.lastActiveSceneView.camera, "align view"); //usually not undo-able in unity
+            SceneView.lastActiveSceneView.camera.transform.rotation = Quaternion.FromToRotation(Vector3.forward, Vector3.down);
+        }
     }
 
     void OnSceneGUI()
@@ -87,8 +95,14 @@ public class RouteEditorScript : Editor
             EditorGUI.BeginChangeCheck();
 
             Handles.Label(t.positions[i], i.ToString());
-            Vector3 position = Handles.PositionHandle(t.positions[i], Quaternion.identity);
-
+            //Vector3 position = Handles.PositionHandle(t.positions[i], Quaternion.identity);
+            Vector3 position = t.positions[i];
+            Handles.color = Handles.xAxisColor;
+            position = Handles.Slider(position, Vector3.right);
+            Handles.color = Handles.zAxisColor;
+            position = Handles.Slider(position, Vector3.forward);
+            Handles.color = Handles.zAxisColor;
+            position = Handles.FreeMoveHandle(position, Quaternion.identity, 0.5f, new Vector3(.5f, .5f, .5f), Handles.RectangleCap);
             if (EditorGUI.EndChangeCheck())
             {
                 Undo.RecordObject(target, "Changed Router Position");
